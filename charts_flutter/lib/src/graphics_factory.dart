@@ -15,6 +15,7 @@
 
 import 'package:charts_common/common.dart' as common
     show GraphicsFactory, LineStyle, TextElement, TextStyle;
+import 'package:flutter/src/painting/text_scaler.dart';
 import 'package:flutter/widgets.dart'
     show BuildContext, DefaultTextStyle, MediaQuery;
 import 'line_style.dart' show LineStyle;
@@ -22,7 +23,7 @@ import 'text_element.dart' show TextElement;
 import 'text_style.dart' show TextStyle;
 
 class GraphicsFactory implements common.GraphicsFactory {
-  final double textScaleFactor;
+  final TextScaler textScaleFactor;
   final DefaultTextStyle defaultTextStyle;
 
   GraphicsFactory(BuildContext context,
@@ -50,6 +51,6 @@ class GraphicsFactory implements common.GraphicsFactory {
 class GraphicsFactoryHelper {
   const GraphicsFactoryHelper();
 
-  double getTextScaleFactorOf(BuildContext context) =>
-      MediaQuery.textScaleFactorOf(context);
+  TextScaler getTextScaleFactorOf(BuildContext context) =>
+      MediaQuery.textScalerOf(context);
 }

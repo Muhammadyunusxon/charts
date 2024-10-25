@@ -13,9 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter/material.dart' show BuildContext;
+import 'package:flutter/cupertino.dart';
 import 'package:mockito/mockito.dart';
-import 'package:flutter/widgets.dart' show InheritedWidget;
 import 'package:test/test.dart';
 import 'package:charts_flutter/src/graphics_factory.dart';
 import 'package:charts_flutter/src/text_element.dart';
@@ -31,18 +30,18 @@ class FakeBuildContext extends Fake implements BuildContext {
 
 // Gave up trying to figure out how to use mockito for now.
 class FakeGraphicsFactoryHelper extends Fake implements GraphicsFactoryHelper {
-  double textScaleFactor;
+  TextScaler textScaleFactor;
 
   FakeGraphicsFactoryHelper(this.textScaleFactor) {}
 
   @override
-  double getTextScaleFactorOf(BuildContext context) => textScaleFactor;
+  TextScaler getTextScaleFactorOf(BuildContext context) => textScaleFactor;
 }
 
 void main() {
   test('Text element gets assigned scale factor', () {
     final context = FakeBuildContext();
-    final helper = FakeGraphicsFactoryHelper(3.0);
+    final helper = FakeGraphicsFactoryHelper(TextScaler.linear(12));
     final graphicsFactory = new GraphicsFactory(context, helper: helper);
 
     final textElement =

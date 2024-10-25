@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:ui' show TextAlign, TextDirection;
 import 'package:charts_common/common.dart' as common
     show
         MaxWidthStrategy,
@@ -21,8 +20,7 @@ import 'package:charts_common/common.dart' as common
         TextDirection,
         TextMeasurement,
         TextStyle;
-import 'package:flutter/rendering.dart'
-    show Color, TextBaseline, TextPainter, TextSpan, TextStyle;
+import 'package:flutter/cupertino.dart';
 
 /// Flutter implementation for text measurement and painter.
 class TextElement implements common.TextElement {
@@ -31,7 +29,7 @@ class TextElement implements common.TextElement {
   @override
   final String text;
 
-  final double? textScaleFactor;
+  final TextScaler? textScaleFactor;
 
   var _painterReady = false;
   common.TextStyle? _textStyle;
@@ -163,7 +161,7 @@ class TextElement implements common.TextElement {
           : null;
 
     if (textScaleFactor != null) {
-      _textPainter.textScaleFactor = textScaleFactor!;
+      _textPainter.textScaler = textScaleFactor!;
     }
 
     _textPainter.layout(maxWidth: maxWidth?.toDouble() ?? double.infinity);

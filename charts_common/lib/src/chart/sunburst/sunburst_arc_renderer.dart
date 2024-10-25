@@ -77,17 +77,14 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
     seriesList.forEach((MutableSeries<D> series) {
       var elements = <SunburstArcRendererElement<D>>[];
 
-      var domainFn = series.domainFn;
       var measureFn = series.measureFn;
 
       // The seriesMeasureTotal needs to be computed from currently displayed
       // top level.
-      var seriesMeasureTotal = 0.0;
       for (var i = 0; i < series.data.length; i++) {
         final node = series.data[i] as TreeNode<Object>;
         final measure = measureFn(i);
         if (node.depth == 1 && measure != null) {
-          seriesMeasureTotal += measure;
         }
       }
 
@@ -95,11 +92,6 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
       // x axis. Start our first slice at the positive y axis instead.
       var startAngle = config.startAngle;
       var arcLength = config.arcLength;
-
-      var totalAngle = 0.0;
-
-      var measures = <num>[];
-
       // No data processing is same as the regular arc renderer.
       if (series.data.isEmpty) {
         // If the series has no data, generate an empty arc element that
@@ -423,30 +415,23 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
     super.paint(canvas, animationPercent);
   }
 
-  bool _isNodeDisplayed(TreeNode<D>? node) {
-    return node != null &&
-        (node.depth <= config.initialDisplayLevel ||
-            _nodeToExpand.contains(node));
-  }
 
   // Records the nodes to expand beyond initial display level.
   void expandNode(TreeNode<D> node) {
-    if (node == null) {
-      _nodeToExpand.clear();
-    } else if (node.hasChildren) {
-      // Collapse rings up to the clicked expanded node.
-      if (node.children.any((e) => _nodeToExpand.contains(e))) {
-        node.visit((e) {
-          if (node != e) {
-            _nodeToExpand.remove(e);
-          }
-        });
-      } else {
-        // Expand clicked node by one level.
-        _nodeToExpand.add(node);
-        _nodeToExpand.addAll(node.children);
-      }
+    if (node.hasChildren) {
+    // Collapse rings up to the clicked expanded node.
+    if (node.children.any((e) => _nodeToExpand.contains(e))) {
+      node.visit((e) {
+        if (node != e) {
+          _nodeToExpand.remove(e);
+        }
+      });
+    } else {
+      // Expand clicked node by one level.
+      _nodeToExpand.add(node);
+      _nodeToExpand.addAll(node.children);
     }
+  }
   }
 
   /// Assigns one color pallet for each subtree from the children of the root

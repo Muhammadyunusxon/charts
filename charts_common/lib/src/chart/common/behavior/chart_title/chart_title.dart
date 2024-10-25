@@ -398,13 +398,9 @@ class _ChartTitleLayoutView<D> extends LayoutView {
         break;
 
       case BehaviorPosition.inside:
-        preferredWidth = _drawAreaBounds != null
-            ? min(_drawAreaBounds.width, maxWidth)
-            : maxWidth;
+        preferredWidth = min(_drawAreaBounds.width, maxWidth);
 
-        preferredHeight = _drawAreaBounds != null
-            ? min(_drawAreaBounds.height, maxHeight)
-            : maxHeight;
+        preferredHeight = min(_drawAreaBounds.height, maxHeight);
         break;
     }
 
@@ -435,30 +431,27 @@ class _ChartTitleLayoutView<D> extends LayoutView {
     var subTitleHeight = 0.0;
 
     // First, measure the height of the title and sub-title.
-    if (_config.title != null) {
-      // Chart titles do not animate. As an optimization for Flutter, cache the
-      // [TextElement] to avoid an expensive painter layout operation on
-      // subsequent animation frames.
-      if (_titleTextElement == null) {
-        // Create [TextStyle] from [TextStyleSpec] to be used by all the
-        // elements. The [GraphicsFactory] is needed so it can't be created
-        // earlier.
-        final textStyle =
-            _getTextStyle(graphicsFactory!, _config.titleStyleSpec);
+    // Chart titles do not animate. As an optimization for Flutter, cache the
+    // [TextElement] to avoid an expensive painter layout operation on
+    // subsequent animation frames.
+    if (_titleTextElement == null) {
+      // Create [TextStyle] from [TextStyleSpec] to be used by all the
+      // elements. The [GraphicsFactory] is needed so it can't be created
+      // earlier.
+      final textStyle = _getTextStyle(graphicsFactory!, _config.titleStyleSpec);
 
-        _titleTextElement = graphicsFactory!.createTextElement(_config.title)
-          ..maxWidthStrategy = _config.maxWidthStrategy
-          ..textStyle = textStyle;
+      _titleTextElement = graphicsFactory!.createTextElement(_config.title)
+        ..maxWidthStrategy = _config.maxWidthStrategy
+        ..textStyle = textStyle;
 
-        _titleTextElement!.maxWidth =
-            resolvedTitleDirection == ChartTitleDirection.horizontal
-                ? _componentBounds.width
-                : _componentBounds.height;
-      }
-
-      // Get the height of the title so that we can off-set both text elements.
-      titleHeight = _titleTextElement!.measurement.verticalSliceWidth;
+      _titleTextElement!.maxWidth =
+          resolvedTitleDirection == ChartTitleDirection.horizontal
+              ? _componentBounds.width
+              : _componentBounds.height;
     }
+
+    // Get the height of the title so that we can off-set both text elements.
+    titleHeight = _titleTextElement!.measurement.verticalSliceWidth;
 
     if (_config.subTitle != null) {
       // Chart titles do not animate. As an optimization for Flutter, cache the
@@ -488,23 +481,21 @@ class _ChartTitleLayoutView<D> extends LayoutView {
     }
 
     // Draw a title if the text is not empty.
-    if (_config.title != null) {
-      final labelPoint = _getLabelPosition(
-          true,
-          _componentBounds,
-          resolvedTitleDirection,
-          _titleTextElement!,
-          titleHeight,
-          subTitleHeight);
+    final labelPoint = _getLabelPosition(
+        true,
+        _componentBounds,
+        resolvedTitleDirection,
+        _titleTextElement!,
+        titleHeight,
+        subTitleHeight);
 
-      if (labelPoint != null) {
-        final rotation = resolvedTitleDirection == ChartTitleDirection.vertical
-            ? -pi / 2
-            : 0.0;
+    if (labelPoint != null) {
+      final rotation = resolvedTitleDirection == ChartTitleDirection.vertical
+          ? -pi / 2
+          : 0.0;
 
-        canvas.drawText(_titleTextElement!, labelPoint.x, labelPoint.y,
-            rotation: rotation);
-      }
+      canvas.drawText(_titleTextElement!, labelPoint.x, labelPoint.y,
+          rotation: rotation);
     }
 
     // Draw a sub-title if the text is not empty.
